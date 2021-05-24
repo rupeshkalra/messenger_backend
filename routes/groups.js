@@ -38,23 +38,29 @@ router.post('/create', jsonParser, (req, res) => {
 
 router.post('/getrooms', jsonParser, (req, res) => {
     const {email} = req.body;
-    console.log(email);
-    User.findOne({email}, (err, user) => {
+    
+    User.findOne({email}, async (err, user) => {
+        var groupnames=new Array();
         if(err) res.status(500).json("Error has occured. Please refresh page")
         else if(!user) res.status(400).json("User not found.")
         else{
                 const grps=user.communications;
-                const groupnames=[];
-                for(let i=0;i<grps.length;i++){
-                    Group.findById(grps[i],(err,grp)=>{
-                        if(err){
-                            console.log(err);
-                        }
-                        groupname=grp.name;
-                        groupnames.push(groupname);
-                    })
-                }
-                res.status(200).json({userchats:groupnames});
+                
+                    for(let i=0;i<grps.length;i++){
+                        const finder=grps[i];
+                        await Group.find({"_id":finder},(err,grp)=>{
+                            if(err){
+                                console.log(err);
+                            }
+                            if(grp){    
+                                const groupdata=grp[0];
+                                groupnames.push(groupdata);
+                            }
+                        })
+                    }
+                      
+                   res.status(200).json({userchats:groupnames});
+                
             }
         })
 })
