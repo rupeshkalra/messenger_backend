@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 const Group = require('../models/group.model');
 const User = require('../models/user.model');
+const Message = require('../models/message.model');
 const mongoose =require('mongoose');
 
 
@@ -32,6 +33,31 @@ router.post('/create', jsonParser, (req, res) => {
                     user.save()
                     .then(() => res.status(200).json({message: "Group created.", newgrp}))
                 });
+        }
+    })
+})
+
+router.post('/getchatdetails', jsonParser, (req, res) => {
+    const {chatid} = req.body;
+    console.log("chatid "+chatid);
+    Group.findById({"_id" :chatid}, async (err, grp) => {
+        if(err){res.status(500).json("Error has occured.")}
+        else if(!grp)
+        {res.status(400).json("error")}
+        else{         
+                const chatname=grp.name;
+                const messageids=grp.messages;
+                const userchats=[];
+
+                for(let i=0;i<messageids.length;i++){
+                await Message.findById({"_id":messageids[i]},(err,message)=>{
+                        userchats.push(message);
+                        console.log("!!!!!!!!!!!   "+i+" "+message.message);
+                    });
+                    console.log("---------  "+i);
+                }
+                console.log(userchats);
+                res.status(200).json({userchats:userchats,chatname:chatname});
         }
     })
 })

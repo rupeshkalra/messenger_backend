@@ -6,6 +6,7 @@ const mongoose =require('mongoose');
 const {createMessage} = require('./routes/messages');
 const UserRouter = require('./routes/user');
 const GroupRouter = require('./routes/groups');
+const MessagesRouter = require('./routes/messages');
 
 require('dotenv').config();
 
@@ -18,6 +19,7 @@ app.use(cors());
 //routes
 app.use('/users', UserRouter);
 app.use('/group', GroupRouter);
+app.use('/message', MessagesRouter);
 
 //mongodb connection
 const URI = "mongodb+srv://admin:uWnGi6WMcjiQ0vid@cluster0.v0tav.mongodb.net/messageappdb?retryWrites=true&w=majority";

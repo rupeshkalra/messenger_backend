@@ -5,16 +5,20 @@ const Schema = mongoose.Schema;
 const MessageSchema = new Schema(
   {
     sender: {
-      type: Schema.Types.ObjectId,
-      required: true,
+      type: Schema.Types.ObjectId , ref:'User',
+      required: true
+    },
+    sendername:{
+      type:String,
+      required:true
     },
     message: {
       type: String,
-      required: true,
+      required: true
     },
   },
   {
-    timestamps: true,
+    timestamps: true
   }
 );
 
