@@ -41,8 +41,10 @@ router.post("/create", jsonParser, (req, res) => {
 
 router.post("/getchatdetails", jsonParser, (req, res) => {
   const { chatid } = req.body;
+
   console.log("chatid " + chatid);
-  Group.findById({ _id: chatid }, async (err, grp) => {
+  console.log(typeof(chatid));
+  Group.findById(chatid, async (err, grp) => {
     if (err) {
       res.status(500).json("Error has occured.");
     } else if (!grp) {
@@ -60,6 +62,29 @@ router.post("/getchatdetails", jsonParser, (req, res) => {
       res.status(200).json({ userchats: userchats, chatname: chatname });
     }
   });
+});
+
+router.post("/searchchat", jsonParser, (req, res) => {
+    const { user,email,name } = req.body;
+    
+    Group.findOne({name}, async (err, grp) => {
+      if (err) {
+        res.status(500).json("Error has occured.");
+      } else if (!grp) {
+        
+        res.status(200).json({ message: "working..."})
+
+      } else {
+
+        const user = await User.findOne({email}).exec();
+        
+        user.communications.push(grp._id);
+        user.save()
+        .then(() =>
+          res.status(200).json({ message: "Group added.", user })
+        );
+      }
+    });
 });
 
 router.post("/getrooms", jsonParser, (req, res) => {
