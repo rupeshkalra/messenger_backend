@@ -42,8 +42,6 @@ router.post("/create", jsonParser, (req, res) => {
 router.post("/getchatdetails", jsonParser, (req, res) => {
   const { chatid } = req.body;
 
-  console.log("chatid " + chatid);
-  console.log(typeof(chatid));
   Group.findById(chatid, async (err, grp) => {
     if (err) {
       res.status(500).json("Error has occured.");
@@ -75,10 +73,16 @@ router.post("/searchchat", jsonParser, (req, res) => {
         res.status(200).json({ message: "working..."})
 
       } else {
-
+        let dontadd=false;
         const user = await User.findOne({email}).exec();
-        
-        user.communications.push(grp._id);
+        for(let i=0;i<user.communications.length;i++){
+          if(user.communications[i]==grp._id){
+            dontadd=true;
+          }
+        }
+        if(!dontadd){
+          user.communications.push(grp._id);
+        }
         user.save()
         .then(() =>
           res.status(200).json({ message: "Group added.", user })
