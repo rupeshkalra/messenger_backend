@@ -39,6 +39,53 @@ router.post("/create", jsonParser, (req, res) => {
   });
 });
 
+
+// router.delete("/delete", jsonParser, (req, res) => {
+//   const { mail,chatid } = req.body;
+
+//   Group.findOne({ chatid }, (err, grp) => {
+//     if (err) {
+//       res.status(500).json("Error has occured.");
+//     } else if (!grp) {
+//       res.status(400).json("Error exists");
+//     } else {
+
+//       for(let i=0;i<grp.messages.length;i++){
+//         grp.messages = Message.findByIdAndDelete(grp.messages[i]._id,(err,res)=>{
+//           if(err){
+//             console.log(err);
+//           }
+//           console.log(res);
+//         });
+//         grp.save();
+//       }
+//       console.log(grp);
+
+//       User.findOne({ email }, (err, user) => {
+//         if (err) {
+//           console.log("some issue!");
+//         }
+
+//         let comm = user.communications.filter((curr)=>{chatid!=curr});
+
+//         user.communications=comm;
+//         user
+//           .save()
+//           .then((res) =>console.log(res));
+//       });
+
+//       Group.findByIdAndDelete(chatid,(err,res)=>{
+//         if(err){
+//           console.log(err);
+//         }
+//         console.log(res);
+//         res.status(200).json({message:"group deleted"});
+//       });
+//     }
+//   });
+
+// });
+
 router.post("/getchatdetails", jsonParser, (req, res) => {
   const { chatid } = req.body;
 
