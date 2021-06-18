@@ -22,17 +22,18 @@ app.use('/group', GroupRouter);
 app.use('/message', MessagesRouter);
 
 //mongodb connection
-const URI = "mongodb+srv://admin:uWnGi6WMcjiQ0vid@cluster0.v0tav.mongodb.net/messageappdb?retryWrites=true&w=majority";
+const URI = process.env.ATLAS_URI;
 mongoose.connect(URI, {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true});
 const connection = mongoose.connection;
 connection.once('open', () => {
     console.log("MongoDB database connection established successfully");
 })
 
+const CLIENT_URL=process.env.CLIENT_URL;
 //socket connection
 const io = require("socket.io")(server, {
     cors: {
-      origin: "http://localhost:3000",
+      origin: CLIENT_URL,
       methods: ["GET", "POST"]
     }
   });
@@ -51,7 +52,7 @@ io.on("connection", socket=>{
 });
 
 //listening port
-const Port=8000;
-server.listen(Port,()=>{
-    console.log(`Listening at ${Port}`)
+const PORT=process.env.LISTENING_PORT;
+server.listen(PORT,()=>{
+    console.log(`listning at ${PORT}`);
 })
